@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Events</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 5px 0; }
+    a { text-decoration: none; color: #007bff; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>All Events</h1>
+  <a href="/" style="margin-bottom: 20px; display: inline-block;">← Back to Home</a>
+  <ul id="eventsList"></ul>
+
+  <script>
+    fetch('/api/events')
+      .then(res => res.json())
+      .then(events => {
+        const list = document.getElementById('eventsList');
+        events.forEach(event => {
+          const li = document.createElement('li');
+          li.textContent = `${event.title} (${event.date}) - ${event.location}`;
+          list.appendChild(li);
+        });
+      });
+  </script>
+</body>
+</html>

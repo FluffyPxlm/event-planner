@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>All Events</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .event-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .event-card strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .event-card span {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>All Events</h1>
+  <div id="eventList"></div>
+  <a href="/">← Back to Home</a>
+
+  <script>
+    const events = JSON.parse(localStorage.getItem('events')) || [];
+    const container = document.getElementById('eventList');
+
+    if (events.length === 0) {
+      container.innerHTML = '<p>No events available.</p>';
+    } else {
+      events.forEach(event => {
+        const div = document.createElement('div');
+        div.className = 'event-card';
+        div.innerHTML = `
+          <strong>${event.title}</strong>
+          <span>📅 Date: ${event.date}</span>
+          <span>📍 Location: ${event.location}</span>
+          <span>📝 ${event.description}</span>
+        `;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>

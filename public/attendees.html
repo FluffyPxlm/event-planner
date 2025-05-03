@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Attendees</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    section { margin-bottom: 30px; }
+    h2 { margin-bottom: 5px; }
+    ul { padding-left: 20px; }
+    a { text-decoration: none; color: #007bff; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>All Attendees</h1>
+  <a href="/" style="margin-bottom: 20px; display: inline-block;">← Back to Home</a>
+  <div id="attendeesContainer"></div>
+
+  <script>
+    fetch('/api/events')
+      .then(res => res.json())
+      .then(events => {
+        const container = document.getElementById('attendeesContainer');
+        events.forEach(event => {
+          fetch(`/api/attendees/${event.id}/attendees`)
+            .then(res => res.json())
+            .then(attendees => {
+              const section = document.createElement('section');
+              const title = document.createElement('h2');
+              title.textContent = `${event.title} (${attendees.length} attendees)`;
+              section.appendChild(title);
+              const ul = document.createElement('ul');
+              attendees.forEach(a => {
+                const li = document.createElement('li');
+                li.textContent = `${a.name} (${a.email})`;
+                ul.appendChild(li);
+              });
+              section.appendChild(ul);
+              container.appendChild(section);
+            });
+        });
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Create New Event</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form input, form textarea, form button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    form button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    form button:hover {
+      background-color: #45a049;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Create New Event</h1>
+
+  <form id="eventForm">
+    <input type="text" name="title" placeholder="Event Title" required />
+    <input type="date" name="date" required />
+    <input type="text" name="location" placeholder="Location" required />
+    <textarea name="description" placeholder="Description" required></textarea>
+    <button type="submit">Add Event</button>
+    <div id="eventError" class="error"></div>
+  </form>
+
+  <a href="/">← Back to Home</a>
+
+  <script>
+    const eventForm = document.getElementById('eventForm');
+    const eventError = document.getElementById('eventError');
+
+    let events = JSON.parse(localStorage.getItem('events')) || [];
+
+    eventForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(eventForm).entries());
+
+      if (events.find(ev => ev.title === data.title)) {
+        eventError.textContent = 'Event with this title already exists.';
+        return;
+      }
+
+      data.id = events.length + 1;
+      events.push(data);
+      localStorage.setItem('events', JSON.stringify(events));
+
+      eventForm.reset();
+      eventError.textContent = '';
+      alert('Event created successfully!');
+      window.location.href = '/';
+    });
+  </script>
+</body>
+</html>

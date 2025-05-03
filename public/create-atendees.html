@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Attendee</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form input, form select, form button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    form button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    form button:hover {
+      background-color: #45a049;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Add Attendee</h1>
+
+  <form id="attendeeForm">
+    <select name="event" required></select>
+    <input type="text" name="name" placeholder="Name" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <select name="rsvp" required>
+      <option value="" disabled selected>RSVP</option>
+      <option value="yes">✅ Yes</option>
+      <option value="no">❌ No</option>
+      <option value="maybe">❓ Maybe</option>
+    </select>
+    <button type="submit">Add Attendee</button>
+    <div class="error" id="attendeeError"></div>
+  </form>
+
+  <a href="/">← Back to Home</a>
+
+  <script>
+    const attendeeForm = document.getElementById('attendeeForm');
+    const errorDiv = document.getElementById('attendeeError');
+    const eventSelect = attendeeForm.querySelector('select[name="event"]');
+
+    const events = JSON.parse(localStorage.getItem('events')) || [];
+    const attendees = JSON.parse(localStorage.getItem('attendees')) || [];
+
+    // Заполнить список ивентов
+    if (events.length === 0) {
+      eventSelect.innerHTML = '<option disabled selected>No events available</option>';
+      eventSelect.disabled = true;
+    } else {
+      events.forEach(ev => {
+        const option = document.createElement('option');
+        option.value = ev.title;
+        option.textContent = ev.title;
+        eventSelect.appendChild(option);
+      });
+    }
+
+    attendeeForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(attendeeForm).entries());
+      attendees.push(data);
+      localStorage.setItem('attendees', JSON.stringify(attendees));
+      attendeeForm.reset();
+      errorDiv.textContent = '';
+      alert('Attendee added successfully!');
+    });
+  </script>
+</body>
+</html>

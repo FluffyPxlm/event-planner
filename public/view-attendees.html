@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>All Attendees</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f7f7f7;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    h3 {
+      margin-top: 20px;
+      color: #444;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      background: #fff;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .empty {
+      text-align: center;
+      color: #999;
+      margin-top: 30px;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>All Attendees</h1>
+  <div id="attendeeList"></div>
+  <a href="/">← Back to Home</a>
+
+  <script>
+    const attendees = JSON.parse(localStorage.getItem('attendees')) || [];
+
+    const grouped = attendees.reduce((acc, attendee) => {
+      if (!acc[attendee.event]) acc[attendee.event] = [];
+      acc[attendee.event].push(attendee);
+      return acc;
+    }, {});
+
+    const listDiv = document.getElementById('attendeeList');
+
+    if (attendees.length === 0) {
+      listDiv.innerHTML = '<p class="empty">No attendees registered.</p>';
+    } else {
+      for (const [eventTitle, list] of Object.entries(grouped)) {
+        const section = document.createElement('div');
+        section.innerHTML = `<h3>📌 ${eventTitle}</h3><ul>${list.map(a =>
+          `<li>${a.name} (${a.email}) — RSVP: ${a.rsvp || '–'}</li>`
+        ).join('')}</ul>`;
+        listDiv.appendChild(section);
+      }
+    }
+  </script>
+</body>
+</html>
