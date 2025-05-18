@@ -1,4 +1,4 @@
-# 📅 Event Planner
+#  Event Planner
 
 A full-stack web application for planning and managing events with attendee registration.
 
@@ -10,9 +10,8 @@ A full-stack web application for planning and managing events with attendee regi
 - [Project Structure](#project-structure)  
 - [Backend Setup](#backend-setup)  
 - [Frontend Setup](#frontend-setup)  
-- [API Endpoints](#api-endpoints)  
-- [Screenshots](#screenshots)  
-- [License](#license)  
+- [API Endpoints](#api-endpoints) 
+
 
 ---
 
