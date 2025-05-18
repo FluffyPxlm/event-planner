@@ -4,7 +4,7 @@ A full-stack web application for planning and managing events with attendee regi
 
 ---
 
-## 📚 Table of Contents
+##  Table of Contents
 - [Features](#features)  
 - [Tech Stack](#tech-stack)  
 - [Project Structure](#project-structure)  
@@ -16,7 +16,7 @@ A full-stack web application for planning and managing events with attendee regi
 
 ---
 
-## 🚀 Features
+##  Features
 - Create, edit, and delete events  
 - Add, edit, and remove attendees  
 - Assign attendees to specific events  
@@ -27,7 +27,7 @@ A full-stack web application for planning and managing events with attendee regi
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Frontend
 - React.js  
@@ -42,7 +42,7 @@ A full-stack web application for planning and managing events with attendee regi
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 event-planner/
 ├── backend/
