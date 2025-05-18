@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+class Event {
+  constructor(id, name, date, description = '') {
+    this.id = id;
+    this.name = name;
+    this.date = date;
+    this.description = description;
+  }
+}
 
-const eventSchema = new mongoose.Schema({
-  title: String,
-  date: String,
-  location: String,
-  description: String
-});
-
-module.exports = mongoose.model('Event', eventSchema);
+module.exports = Event;

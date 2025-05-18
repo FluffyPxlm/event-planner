@@ -1,47 +1,77 @@
-const Event = require('../models/Event');
-const Attendee = require('../models/Attendee');
+const eventDao = require('../daos/event.dao');
+const attendeeDao = require('../daos/attendee.dao'); // Не забудь подключить!
 
-// Получить все ивенты
-exports.getAllEvents = async (req, res) => {
-  try {
-    const events = await Event.find().populate('attendees');
-    res.json(events);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+function addEvent(req, res) {
+  const { name, date, description } = req.body;
+
+  if (!name || !date) {
+    return res.status(400).json({ error: 'Name and date are required.' });
   }
-};
 
-// Получить подробности события
-exports.getEventDetails = async (req, res) => {
-  try {
-    const event = await Event.findById(req.params.eventId).populate('attendees');
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-    res.json(event);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  const eventDate = new Date(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (eventDate < today) {
+    return res.status(400).json({ error: 'Cannot create event in the past.' });
   }
-};
 
-// Добавить участника
-exports.addAttendee = async (req, res) => {
-  try {
-    const { name, email } = req.body;
-    const event = await Event.findById(req.params.eventId);
+  const existingEvent = eventDao.getAllEvents().find(
+    (e) => e.name.toLowerCase() === name.toLowerCase() && e.date === date
+  );
 
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-
-    const newAttendee = new Attendee({ name, email });
-    await newAttendee.save();
-
-    event.attendees.push(newAttendee);
-    await event.save();
-
-    res.status(201).json(newAttendee);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (existingEvent) {
+    return res.status(400).json({ error: 'Event with the same name and date already exists.' });
   }
-};
+
+  const event = eventDao.createEvent(name, date, description);
+  res.status(201).json(event);
+}
+
+function listEvents(req, res) {
+  const events = eventDao.getAllEvents();
+  res.json(events);
+}
+
+function updateEvent(req, res) {
+  const { id } = req.params;
+  const { name, date, description } = req.body;
+
+  const eventDate = new Date(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (eventDate < today) {
+    return res.status(400).json({ error: 'Cannot set event date in the past.' });
+  }
+
+  const existingEvent = eventDao.getAllEvents().find(
+    (e) => e.id !== parseInt(id) && e.name.toLowerCase() === name.toLowerCase() && e.date === date
+  );
+
+  if (existingEvent) {
+    return res.status(400).json({ error: 'Event with the same name and date already exists.' });
+  }
+
+  const updated = eventDao.updateEvent(parseInt(id), name, date, description);
+  if (updated) {
+    res.json(updated);
+  } else {
+    res.status(404).json({ error: 'Event not found.' });
+  }
+}
+
+function deleteEvent(req, res) {
+  const { id } = req.params;
+
+  attendeeDao.deleteAttendeesByEventId(parseInt(id));
+
+  const deleted = eventDao.deleteEvent(parseInt(id));
+  if (deleted) {
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Event not found.' });
+  }
+}
+
+module.exports = { addEvent, listEvents, updateEvent, deleteEvent };

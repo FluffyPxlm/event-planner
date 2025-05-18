@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const AttendeeController = require('../controllers/attendee.controller');
-я
-router.get('/:eventId/attendees', AttendeeController.getByEvent);
+const attendeeController = require('../controllers/attendee.controller');
 
-router.post('/:eventId/attendees', AttendeeController.create);
+router.get('/', attendeeController.listAttendees);
+router.post('/', attendeeController.addAttendee);
+router.put('/:id', attendeeController.updateAttendee);
+router.delete('/:id', attendeeController.deleteAttendee);
 
 module.exports = router;

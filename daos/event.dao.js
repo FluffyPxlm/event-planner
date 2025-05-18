@@ -1,17 +1,33 @@
-const Event = require('../models/event.model');
+let events = [];
+let currentId = 1;
 
-const EventDAO = {
-  async getAll() {
-    return await Event.find();
-  },
+function createEvent(name, date, description = '') {
+  const event = { id: currentId++, name, date, description };
+  events.push(event);
+  return event;
+}
 
-  async getById(id) {
-    return await Event.findById(id);
-  },
+function getAllEvents() {
+  return events;
+}
 
-  async create(data) {
-    return await Event.create(data);
-  }
-};
+function updateEvent(id, name, date, description) {
+  const event = events.find(e => e.id === id);
+  if (!event) return null;
 
-module.exports = EventDAO;
+  if (name) event.name = name;
+  if (date) event.date = date;
+  if (description !== undefined) event.description = description;
+
+  return event;
+}
+
+function deleteEvent(id) {
+  const index = events.findIndex(e => e.id === id);
+  if (index === -1) return false;
+
+  events.splice(index, 1);
+  return true;
+}
+
+module.exports = { createEvent, getAllEvents, updateEvent, deleteEvent };

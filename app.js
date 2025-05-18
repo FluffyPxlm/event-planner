@@ -1,27 +1,26 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
-const path = require('path');
+const port = 3000;
 
-// Хостинг всех файлов из папки "public"
-app.use(express.static(path.join(__dirname, 'public')));
+// Импорт маршрутов
+const attendeeRoutes = require('./routes/attendee.routes');
+const eventRoutes = require('./routes/event.routes');
 
-// Главная страница
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Рабочая проверка API
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.send('API is working!');
 });
 
-// Страница создания события
-app.get('/create/event', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/create-event.html'));
-});
-
-// Страница со всеми участниками
-app.get('/view/attendees', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/view-attendees.html'));
-});
+// Роуты API
+app.use('/api/attendees', attendeeRoutes);
+app.use('/api/events', eventRoutes);
 
 // Запуск сервера
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
