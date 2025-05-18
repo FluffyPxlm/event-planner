@@ -72,7 +72,7 @@ Run the server:
 
 node app.js
 
-The backend will be available at http://localhost:3001.
+The backend will be available at http://localhost:3000.
 
 Frontend Setup
 
@@ -88,7 +88,7 @@ Run the frontend app:
 
 npm start
 
-The app will be available at http://localhost:3000.
+The app will be available at http://localhost:5173.
 
 API Endpoints
 Events
